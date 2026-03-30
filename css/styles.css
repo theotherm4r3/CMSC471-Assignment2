@@ -1,0 +1,23 @@
+/* Reset default styles */
+* {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0px auto;
+    line-height: 1.8;
+}
+
+/* Container styling for layout */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    font-family: Arial, sans-serif;
+}
+
+/* For svg border */
+#vis svg {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
