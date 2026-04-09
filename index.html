@@ -17,14 +17,43 @@
 
         <br>
 
-        <h3>White Hat Visualization</h3>
-         <div id="controls">
-            Country: <select id="myCountry" class="variable"></select>
-            Measurement: <select id="myMeasurement" class="variable"></select>
-        </div>
-        <div class="vis-container">
-            <div class='item' id="whitehat-vis"></div>
-            <div id="tooltip"></div>
+        <h2>White Hat Visualization</h2>
+        <h3>Gender Gap in Secondary and Tertiary Education (% Male Enrolled - % Female Enrolled)</h3>
+        <div class="flex-box">
+            <div class="col">
+                <br/>
+                <br/>
+                <h4>Variables: </h4>
+                <br>
+                <p><b>Secondary School</b>: <i>Completes provision of basic education</i></p>
+                <p><b>Tertiary School</b>: <i>Additional education after completion of secondary school</i></p>
+                <p><b>Gross Enrollment %</b>: <i># of Enrolled Students (All Ages) per Gender / Total # of Eligible Students per Gender</i></p>
+                <p><b>Net Enrollment %</b>: <i># of Enrolled Students (Eligible Ages Only) per Gender / Total # of Eligible Students per Gender</i></p>
+
+                <p><b>Gender Gap</b>: <i>Male Enrollment % - Female Enrollment %</i></p>
+            </div>
+            <div class="col" id="svg-section">
+                <div id="controls">
+                    <b>Country: </b> <select id="myCountry" class="variable"></select>
+                    <p>       </p>
+                    <b>Measurement:</b> <select id="myMeasurement" class="variable"></select>
+                </div>
+                <div class="vis-container">
+                    <div class='item' id="whitehat-vis"></div>
+                    <div class='item' id="whitehat-vis-region"></div>
+                    <div class='item' id="whitehat-vis-income"></div>
+                    <div class='item' id="whitehat-vis-world"></div>
+                    <div id="tooltip"></div>
+                </div>
+            </div>
+            <div class="col">
+                <h4>Region</h4>
+                <p><i>Regions aggregated as mean</i></p>
+
+                <h4>Income</h4>
+                <p><i>Income classification based on 2020 GNI per capita and aggregated as mean</i></p>
+
+            </div>
         </div>
 
         <br>
