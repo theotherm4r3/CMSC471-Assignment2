@@ -1,15 +1,15 @@
 /* Reset default styles */
 * {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 1500px;
     margin: 0px auto;
     line-height: 1.8;
 }
 
 /* Container styling for layout */
 .container {
-    max-width: 800px;
-    margin: 2rem auto;
+    max-width: 100%;
+    margin: 1rem auto;
     font-family: Arial, sans-serif;
 }
 
@@ -30,4 +30,53 @@
     border-radius: 4px;
     pointer-events: none; /* Prevent tooltip from interfering with mouse events */
     font-size: 12px;
+    z-index: 900;
+}
+
+.vis-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  grid-template-rows: repeat(2, auto); 
+  gap: 5px; 
+  padding: 8px;
+  align-content: center;
+}
+
+.item {
+  width: 100%;           /* Fill the grid cell horizontally */
+  height: 350px;         /* Match your SVG height */
+  position: relative;    /* For tooltip absolute positioning inside this div */
+}
+
+#controls {
+    margin-left: 0.5rem;
+    margin-top: 1rem;
+}
+
+h3 {
+    text-align: center;
+    margin: 10px;
+}
+
+h4 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.flex-box{
+    display:flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.col{
+    flex: 1;
+    text-align: center;
+}
+
+#svg-section{
+    width: 1000px;
 }
