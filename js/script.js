@@ -4,7 +4,7 @@ console.log('D3 Version:', d3.version);
 
 //make margins
 const margin = {top: 40, right: 40, bottom: 40, left: 60};
-const width = 500 - margin.left - margin.right;
+const width = 550 - margin.left - margin.right;
 const height = 350 - margin.top - margin.bottom;
 
 let allData = [], metaData = []
@@ -108,13 +108,13 @@ allData = combinedData.flatMap(row =>
     gapKeys.map(key => {
         //determine which raw columns match the current gap key
         let f_val, m_val;
-        if (key === "secondary_enrollment_gap_gross") {
+        if (key == "secondary_enrollment_gap_gross") {
             f_val = row.secondary_enrollment_f_gross;
             m_val = row.secondary_enrollment_m_gross;
-        } else if (key === "secondary_enrollment_gap_net") {
+        } else if (key == "secondary_enrollment_gap_net") {
             f_val = row.secondary_enrollment_f_net;
             m_val = row.secondary_enrollment_m_net;
-        } else if (key === "tertiary_enrollment_gap_gross") {
+        } else if (key == "tertiary_enrollment_gap_gross") {
             f_val = row.tertiary_enrollment_f_gross;
             m_val = row.tertiary_enrollment_m_gross;
         }
@@ -356,7 +356,24 @@ svgRegion.append("text")
     .attr("text-anchor", "start")
     .text(`REGION: ${regionCodeToName[targetCountryRegion].toUpperCase()}`) // Displays the current x-axis variable
     .attr('class', 'labels')
-        .style('font-weight', 'bold')
+    .style('font-weight', 'bold')
+     .on('mouseover', function (event, d) {
+                console.log(d) 
+                d3.select('#tooltip')
+                    .style("display", 'block') 
+                    .html( 
+                    `<p><b>Region: </b><i>Aggregate gender gap for all countries in this region. Includes all income levels. </i></p>`)
+                    .style("left", (event.pageX + 20) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function (event, d) {
+                d3.select('#tooltip')
+                .style('display', 'none') 
+                 d3.select(this)
+                .style('stroke', 'black')
+                .style('stroke-width', '0px')
+                 .style('opacity', 1)
+            })
 
 
       // Title
@@ -367,6 +384,24 @@ svgIncome.append("text")
     .text(`INCOME: ${incomeCodeToName[targetCountryIncome].toUpperCase()}`)
     .attr('class', 'labels')
     .style('font-weight', 'bold')
+    .on('mouseover', function (event, d) {
+                console.log(d) 
+                d3.select('#tooltip')
+                    .style("display", 'block') 
+                    .html( 
+                    `<p><b>Income Level: </b><i>Aggregate gender gap for all countries with this income level. Based on GNI per capita. </i></p>`)
+                    .style("left", (event.pageX + 20) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function (event, d) {
+                d3.select('#tooltip')
+                .style('display', 'none') 
+                 d3.select(this)
+                .style('stroke', 'black')
+                .style('stroke-width', '0px')
+                 .style('opacity', 1)
+            })
+
 
 
       //Title
