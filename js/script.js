@@ -3,9 +3,9 @@ import 'https://esm.sh/d3-transition';
 console.log('D3 Version:', d3.version);
 
 //make margins
-const margin = {top: 40, right: 40, bottom: 40, left: 60};
-const width = 550 - margin.left - margin.right;
-const height = 350 - margin.top - margin.bottom;
+const margin = {top: 25, right: 30, bottom: 35, left: 60};
+const width = 500 - margin.left - margin.right;
+const height = 300 - margin.top - margin.bottom;
 
 let allData = [], metaData = []
 let xScale, yScale
@@ -183,6 +183,8 @@ function setupSelector(){
 
       if (id === "myMeasurement") {
           yVar = value;
+          d3.select("#gross-warning")
+            .style("display", yVar.includes("_net") ? "none" : "block"); //hide warning about gross if gross is selected
       } else if (id === "myCountry") {
           targetCountryCode = value;
           const row = allData.find(d => d.country_code == value);
@@ -344,7 +346,7 @@ svg.append("text")
     .attr("x", 0)
     .attr("y", -10)
     .attr("text-anchor", "start")
-    .text(targetCountryName.toUpperCase()) // Displays the current x-axis variable
+    .text(`COUNTRY: ${targetCountryName.toUpperCase()}`) // Displays the current x-axis variable
     .attr('class', 'labels')
         .style('font-weight', 'bold')
 

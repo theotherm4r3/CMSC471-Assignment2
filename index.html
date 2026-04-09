@@ -18,21 +18,22 @@
         <br>
 
         <h2>White Hat Visualization</h2>
-        <h3>Gender Gap in Secondary and Tertiary Education (% Male Enrollment - % Female Enrollment)</h3>
+        <h3>Gender Gap in Secondary and Tertiary Enrollment (% Male - % Female), 1980-2018</h3>
         <div class="flex-box">
             <div class="col">
                 <br/>
                 <br/>
                 <h4>Explanation of Variables: </h4>
                 <br/>
-                <h4>% Gross Enrollment</h4> <i># of Enrolled Students (All Ages) per Gender / Total # of Eligible Students per Gender</i></p>
-                <h4>% Net Enrollment %</h4> <i># of Enrolled Students (Eligible Ages Only) per Gender / Total # of Eligible Students per Gender</i></p>
+                <p><b>% Gross Enrollment</b></p> <p><i># of Enrolled Students (All Ages) per Gender / Total # of Eligible Students per Gender</i></p>
+                <p><b>% Net Enrollment</b></p> <p><i># of Enrolled Students (Eligible Ages Only) per Gender / Total # of Eligible Students per Gender</i></p>
             </div>
             <div class="col" id="svg-section">
                 <div id="controls">
                     <b>Country: </b> <select id="myCountry" class="variable"></select>
                     <p>       </p>
                     <b>Measurement:</b> <select id="myMeasurement" class="variable"></select>
+                    <p id="gross-warning" style="font-size: 10px; color: #aa2b27;"><i>Note: gross enrollment % may overestimate actual enrollment.</i></p>
                 </div>
                 <div class="vis-container">
                     <div class='item' id="whitehat-vis"></div>
@@ -45,7 +46,7 @@
             <div class="col">
                 <h4>Gender Gap Calculation:</h4> 
                 <br>
-                <i>Male Enrollment % - Female Enrollment %</i></p>
+                <p><i>Male Enrollment % - Female Enrollment %</i></p>
             </div>
         </div>
 
