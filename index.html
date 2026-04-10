@@ -18,22 +18,23 @@
         <br>
 
         <h2>White Hat Visualization</h2>
-        <h3>Gender Gap in Secondary and Tertiary Enrollment (% Male - % Female), 1980-2018</h3>
+        <h3>Secondary and Tertiary Enrollment Gender Gap Across the World, 1980-2018</h3>
+        <p style="font-size: 14px; color: #555; text-align: center">Explore the difference in proportion of males and females enrolled in secondary and tertiary education by country, region, income level, and worldwide.</p>
         <div class="flex-box">
-            <div class="col">
-                <br/>
-                <br/>
-                <h4>Explanation of Variables: </h4>
-                <br/>
-                <p><b>% Gross Enrollment</b></p> <p><i># of Enrolled Students (All Ages) per Gender / Total # of Eligible Students per Gender</i></p>
-                <p><b>% Net Enrollment</b></p> <p><i># of Enrolled Students (Eligible Ages Only) per Gender / Total # of Eligible Students per Gender</i></p>
-            </div>
+          
             <div class="col" id="svg-section">
-                <div id="controls">
-                    <b>Country: </b> <select id="myCountry" class="variable"></select>
-                    <p>       </p>
-                    <b>Measurement:</b> <select id="myMeasurement" class="variable"></select>
-                    <p id="gross-warning" style="font-size: 10px; color: #aa2b27;"><i>Note: gross enrollment % may overestimate actual enrollment.</i></p>
+                <div class="flex-box" id="controls">
+                    <div class="col"></div>
+                    <div class="col">
+                        <b>Country: </b> <select id="myCountry" class="variable"></select>
+                        <p>       </p>
+                        <b>Measurement:</b> <select id="myMeasurement" class="variable"></select>
+                        <p id="gross-warning" style="font-size: 10px; color: #aa2b27;"><i>Note: gross enrollment % may overestimate actual enrollment.</i></p>
+                    </div>
+                    <div  class="col">
+                        <p id="gross-meaning" class="info-box"><b>Gross % enrollment</b> refers to the total enrolled population / the total eligible population (eligible meaning within the expected age range)</p>
+                        <p id="net-meaning" class="info-box" style="display: none"><b>Net % enrollment</b> refers to the total enrolled population within the eligible population / the total eligible population (eligible meaning within the expected age range)</p>
+                    </div>   
                 </div>
                 <div class="vis-container">
                     <div class='item' id="whitehat-vis"></div>
@@ -43,12 +44,19 @@
                     <div id="tooltip"></div>
                 </div>
             </div>
-            <div class="col">
-                <h4>Gender Gap Calculation:</h4> 
-                <br>
-                <p><i>Male Enrollment % - Female Enrollment %</i></p>
-            </div>
+  
         </div>
+
+        <strong>Introduction</strong><p></p>
+        This whitehat visualization demonstrates the gap in female and male school enrollment across countries, regions, income levels, and worldwide from 1980-2018. The data is sourced from World Bank Gender Equality Indicators from 1960-2017 dataset, using the average school enrollment for females and males in secondary (both gross and net %) and tertiary school (just gross %). Only 1980-2018 are included, due to the lack of data before these dates. 
+         <br><strong>Data Transformation</strong><p></p>
+        The data is presented as male % enrollment - female % enrollment. This transformation allows accurate comparison of the gender gap across countries, regions, income levels, and the world; each of these datasets may have different % overall enrollment and Y-axis scales, so by showing the difference between male and female enrollment, the visualization highlights the disparities between genders instead of total enrollment. Additional transformations included filtering by measure type and country, and joining the metadata and gender datasets to use the pre-computed Region and Income Level aggregates from the World Bank dataset. 
+        <br><strong>Marks and Encodings</strong><p></p>
+        Several additional design choices were employed to ensure clarity and accuracy. For markings and encodings, each graph has tooltips, allowing the user to view the year, male enrollment, female enrollment, and difference in enrollment %. Each chart is divided into two halves: blue on the top, indicating a higher % of the male population enrolled than the female, and pink on the bottom, indicating that a higher % of the female population was enrolled. While the data points are discrete, a line was added to each to facilitate clearer representation of the overall trend, although lines were only added between data points of contiguous years to avoid misrepresenting trends in years without data.
+         <br><strong>Titles and Labels</strong><p></p>
+        For titles and labels, each graph is titled with its corresponding subject matter (Country, Region, Income Level, and World Data), dynamically updated with user dropdown selection. An on-hover tooltip allows the user to learn more about the Region and Income Level aggregates. The scale of the axes are not changed as the country and data type selection change, allowing the user to compare accurately across different countries. Since gross % can be a slight overestimation of the true proportion of students enrolled, a warning is displayed when this measurement is selected. It would have been preferable to only include net data, but given the sparse net data availability, gross had to be used. 
+         <br><strong>Insights</strong><p></p>
+        Through these visualizations, several trends were apparent. First, the gap between male and female enrollment decreased worldwide from 1980 to 2017, starting from a 10% difference in 1980 and ending with a 0.7% difference in 2018 for secondary enrollment gross %. In high income countries, the secondary enrollment gap has been consistently around 0 over the last 30 years, while in low-middle income, it has decreased from being male-dominated to about even in 2018, and there has been little change in low income countries since 1980 (stayed around 10% higher for males than females). Tertiary education has become increasingly female-dominated over the past few decades, especially in North American and high-income countries.
 
         <br>
         <h3>Black Hat Visualization</h3>

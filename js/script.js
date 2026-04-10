@@ -73,7 +73,7 @@ function init(){
   .then(([genderData, metadata]) => {
     //console.log("genderData", genderData)
     //console.log("metadata", metadata)
-
+    
     metaData = metadata
 
     //need to map to allow selection for join
@@ -104,7 +104,7 @@ function init(){
       "secondary_enrollment_gap_net"
     ];
 
-allData = combinedData.flatMap(row =>
+    allData = combinedData.flatMap(row =>
     gapKeys.map(key => {
         //determine which raw columns match the current gap key
         let f_val, m_val;
@@ -131,7 +131,10 @@ allData = combinedData.flatMap(row =>
             female_val: f_val,
             adolescent_fertility: row.adolescent_fertility
         };
+        
     })
+
+    
 );
 
   //  console.log("allData", allData)
@@ -185,6 +188,10 @@ function setupSelector(){
           yVar = value;
           d3.select("#gross-warning")
             .style("display", yVar.includes("_net") ? "none" : "block"); //hide warning about gross if gross is selected
+          d3.select("#gross-meaning")
+            .style("display", yVar.includes("_net") ? "none" : "block");
+          d3.select("#net-meaning")
+            .style("display", yVar.includes("_net") ? "block" : "none");
       } else if (id === "myCountry") {
           targetCountryCode = value;
           const row = allData.find(d => d.country_code == value);
@@ -348,7 +355,27 @@ svg.append("text")
     .attr("text-anchor", "start")
     .text(`COUNTRY: ${targetCountryName.toUpperCase()}`) // Displays the current x-axis variable
     .attr('class', 'labels')
-        .style('font-weight', 'bold')
+    .style('font-weight', 'bold')
+    .on('mouseover', function (event, d) {
+                console.log(d) 
+                d3.select('#tooltip')
+                    .style("display", 'block') 
+                    .html( 
+                    `<p><b>Country: ${targetCountryName.toUpperCase()}</b></br>
+                    <p><b>Region:  ${targetCountryRegion.toUpperCase()}</p></b></br>
+                    <p><b>Income Level: ${targetCountryIncome.toUpperCase()}`)
+                    .style("left", (event.pageX + 20) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function (event, d) {
+                d3.select('#tooltip')
+                .style('display', 'none') 
+                 d3.select(this)
+                .style('stroke', 'black')
+                .style('stroke-width', '0px')
+                 .style('opacity', 1)
+            })
+
 
 
       // Title
