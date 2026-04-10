@@ -1010,3 +1010,253 @@ svgWorld.append('text')
     .style('pointer-events', 'none');
 
 }
+
+//BLACK HAT VISUALIZATION 
+
+function drawBlackHat() {
+
+  d3.csv("./data/gender.csv", function(d) {
+    return {
+      country:      d["Country Name"],
+      country_code: d["Country Code"],
+      year:         +d.Year,
+      tertiary_f:   d["average_value_School enrollment, tertiary, female (% gross)"] === ""
+                      ? NaN
+                      : +d["average_value_School enrollment, tertiary, female (% gross)"],
+      tertiary_m:   d["average_value_School enrollment, tertiary, male (% gross)"] === ""
+                      ? NaN
+                      : +d["average_value_School enrollment, tertiary, male (% gross)"]
+    };
+  }).then(function(raw) {
+
+    //compute gap for every row in range
+    const inRange = raw
+      .filter(d =>
+        d.year >= 1995 &&
+        d.year <= 2018 &&
+        !isNaN(d.tertiary_f) &&
+        !isNaN(d.tertiary_m)
+      )
+      .map(d => ({ ...d, gap: d.tertiary_m - d.tertiary_f }));
+
+    //per-country stats
+    const byCountry = d3.group(inRange, d => d.country_code);
+
+    const stats = [];
+    byCountry.forEach((rows, code) => {
+      const aggregateCodes = new Set([
+        'WLD','HIC','LIC','LMC','UMC','LMY','MIC','OED',
+        'NAC','ECS','EAS','SAS','MEA','SSF','LCN','AFE','AFW',
+        'IBD','IDX','IDA','FCS','HPC','PRE','PST','TSA','TSS',
+        'EAP','ECA','LAC','MNA','SAS','SSA','ARB','CSS','CEB',
+        'EAR','EMU','EUU','FRO','GIB','HKG','IMN','MAC','MNP',
+        'NCL','PSE','PYF','TWN','VIR','XKX','INX'
+      ]);
+      if (code.length !== 3 || aggregateCodes.has(code)) return;
+
+      const yearCount  = rows.length;
+      const posCount   = rows.filter(r => r.gap > 0).length;
+      const posFraction = posCount / yearCount;
+      const avgGap     = d3.mean(rows, r => r.gap);
+      const minGap     = d3.min(rows, r => r.gap);
+
+      stats.push({ code, country: rows[0].country, yearCount, posFraction, avgGap, minGap });
+    });
+
+    //pick 6 countries that satisfy conditions
+    const candidates = stats
+      .filter(s =>
+        s.yearCount >= 15 &&
+        s.posFraction === 1.0 &&   // never dips below zero
+        s.avgGap >= 1 &&
+        s.avgGap <= 15
+      )
+      .sort((a, b) => b.yearCount - a.yearCount);  // prefer most complete
+
+    console.log('[BH] candidate countries:', candidates.slice(0, 12).map(s =>
+      `${s.code} (${s.country}): ${s.yearCount} yrs, avg gap ${s.avgGap.toFixed(1)}, min ${s.minGap.toFixed(1)}`
+    ));
+
+    //Pick first 6; if fewer than 6 pass the strict filter
+    let chosen = candidates.slice(2, 7);
+    if (chosen.length < 5) {
+      const fallback = stats
+        .filter(s => s.yearCount >= 12 && s.posFraction >= 0.85 && s.avgGap >= 1 && s.avgGap <= 15)
+        .sort((a, b) => b.yearCount - a.yearCount);
+      chosen = fallback.slice(0, 5);
+    }
+
+    console.log('[BH] chosen:', chosen.map(s => `${s.code} (${s.country})`));
+
+    const featuredCodes = chosen.map(s => s.code);
+    const featuredNames = Object.fromEntries(chosen.map(s => [s.code, s.country]));
+
+    //final dataset using chosen countries
+    const bhData = inRange
+      .filter(d => featuredCodes.includes(d.country_code) && d.gap >= 0)
+      .sort((a, b) => a.year - b.year);
+
+    console.log('[BH] final rows:', bhData.length);
+
+    if (bhData.length === 0) {
+      d3.select('#blackhat-vis')
+        .append('p').style('color','red').style('text-align','center')
+        .text('No data found — check console.');
+      return;
+    }
+
+    //Layout
+    const bMargin = { top: 150, right: 200, bottom: 150, left: 180 };
+    const totalW  = 960;
+    const totalH  = 540;
+    const bWidth  = totalW - bMargin.left - bMargin.right;
+    const bHeight = totalH - bMargin.top  - bMargin.bottom;
+
+    d3.select('#blackhat-vis')
+      .style('width', '100%')
+      .style('display', 'flex')
+      .style('justify-content', 'center');
+
+    const svgBH = d3.select('#blackhat-vis')
+      .append('svg')
+      .attr('width',  totalW)
+      .attr('height', totalH)
+      .style('display', 'block')
+      .style('max-width', '100%')
+      .append('g')
+      .attr('transform', `translate(${bMargin.left},${bMargin.top})`);
+
+    //zoomed y-axis
+    const bhYMin = -2;
+    const bhYMax = Math.ceil(d3.max(bhData, d => d.gap)) + 1;
+
+    const bhXScale = d3.scaleLinear().domain([1995, 2018]).range([0, bWidth]);
+    const bhYScale = d3.scaleLinear().domain([bhYMin, bhYMax]).range([bHeight, 0]);
+    const bhColor  = d3.scaleOrdinal(featuredCodes, d3.schemeTableau10);
+
+    //Parity zone shading
+    svgBH.append('rect')
+      .attr('x', 0).attr('y', bhYScale(1))
+      .attr('width', bWidth)
+      .attr('height', bhYScale(-2) - bhYScale(1))
+      .attr('fill', '#c8e6c9').attr('opacity', 0.5);
+
+    svgBH.append('text')
+      .attr('x', 600).attr('y', bhYScale(1)+50)
+      .style('font-size', '11px').style('fill', '#388e3c')
+      .text('← parity zone (M ≈ F)');
+
+    //Axes
+    svgBH.append('g')
+      .attr('transform', `translate(0,${bHeight})`)
+      .call(d3.axisBottom(bhXScale).tickFormat(d3.format('d')).ticks(10))
+      .selectAll('text').style('font-size', '13px');
+
+    svgBH.append('g')
+      .call(d3.axisLeft(bhYScale).ticks(7))
+      .selectAll('text').style('font-size', '13px');
+
+    // Zero reference line
+    svgBH.append('line')
+      .attr('x1', 0).attr('x2', bWidth)
+      .attr('y1', bhYScale(0)).attr('y2', bhYScale(0))
+      .attr('stroke', '#aaa').attr('stroke-width', 0.8)
+      .attr('stroke-dasharray', '4,3');
+
+    //Axis labels
+    svgBH.append('text')
+      .attr('x', bWidth / 2).attr('y', bHeight + 55)
+      .attr('text-anchor', 'middle').style('font-size', '15px')
+      .text('Year');
+
+    svgBH.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -bHeight / 2).attr('y', -bMargin.left + 140)
+      .attr('text-anchor', 'middle').style('font-size', '13px')
+      .text('Enrollment Differential from Parity Threshold (% points)');
+
+    //title / subtitle
+    svgBH.append('text')
+      .attr('x', bWidth / 2).attr('y', -55)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '20px').style('font-weight', 'bold')
+      .text('Tertiary Enrollment Gap Persists Across Developing Nations');
+
+    svgBH.append('text')
+      .attr('x', bWidth / 2).attr('y', -28)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '14px').style('fill', '#555')
+      .text('Male enrollment persists well above parity threshold in all surveyed nations, 1995–2018');
+
+    //Lines + dots
+    const bhLine = d3.line()
+      .x(d => bhXScale(d.year))
+      .y(d => bhYScale(d.gap))
+      .defined(d => !isNaN(d.gap));
+
+    featuredCodes.forEach(code => {
+      const cd = bhData.filter(d => d.country_code === code);
+      if (cd.length === 0) return;
+
+      svgBH.append('path')
+        .datum(cd)
+        .attr('fill', 'none')
+        .attr('stroke', bhColor(code))
+        .attr('stroke-width', 2.5)
+        .attr('d', bhLine);
+
+      svgBH.selectAll(null)
+        .data(cd)
+        .enter()
+        .append('circle')
+        .attr('r', 4)
+        .attr('cx', d => bhXScale(d.year))
+        .attr('cy', d => bhYScale(d.gap))
+        .attr('fill', bhColor(code))
+        .on('mouseover', function(event, d) {
+          d3.select('#tooltip')
+            .style('display', 'block')
+            .html(`<strong>${featuredNames[d.country_code] || d.country}</strong><br/>
+                   Year: ${d.year}<br/>
+                   Male Enrollment: ${d.tertiary_m.toFixed(1)}%<br/>
+                   Female Enrollment: ${d.tertiary_f.toFixed(1)}%<br/>
+                   Gap (M − F): ${d.gap.toFixed(1)} pp`)
+            .style('left', (event.pageX + 20) + 'px')
+            .style('top',  (event.pageY - 28) + 'px');
+          d3.select(this).attr('r', 6).style('stroke','#000').style('stroke-width','1.5px');
+        })
+        .on('mouseout', function() {
+          d3.select('#tooltip').style('display','none');
+          d3.select(this).attr('r', 4).style('stroke','none');
+        });
+    });
+
+    //Legend 
+    const legend = svgBH.append('g')
+      .attr('transform', `translate(${bWidth +15}, 0)`);
+
+    legend.append('text')
+      .attr('x', 0).attr('y', 0)
+      .style('font-size', '13px').style('font-weight', 'bold')
+      .text('Surveyed Nations');
+
+    featuredCodes.forEach((code, i) => {
+      legend.append('rect')
+        .attr('x', 0).attr('y', i * 22 + 12)
+        .attr('width', 13).attr('height', 13)
+        .attr('fill', bhColor(code));
+      legend.append('text')
+        .attr('x', 20).attr('y', i * 22 + 23)
+        .style('font-size', '12px')
+        .text(featuredNames[code] || code);
+    });
+
+    svgBH.append('text')
+      .attr('x', 0).attr('y', bHeight + 72)
+      .style('font-size', '11px').style('fill', '#888')
+      .text('Source: World Bank Gender Statistics Database. Nations selected for longitudinal data completeness, 1995–2018.');
+
+  });
+}
+
+drawBlackHat();
