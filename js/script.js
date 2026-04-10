@@ -361,9 +361,9 @@ svg.append("text")
                 d3.select('#tooltip')
                     .style("display", 'block') 
                     .html( 
-                    `<p><b>Country: ${targetCountryName.toUpperCase()}</b></br>
-                    <p><b>Region:  ${targetCountryRegion.toUpperCase()}</p></b></br>
-                    <p><b>Income Level: ${targetCountryIncome.toUpperCase()}`)
+                    `<p><b>Country:</b> ${targetCountryName}</p>
+                    <p><b>Region:</b>  ${regionCodeToName[targetCountryRegion]}</p>
+                    <p><b>Income Level:</b> ${incomeCodeToName[targetCountryIncome]}</p>`)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
