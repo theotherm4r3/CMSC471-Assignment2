@@ -91,17 +91,16 @@ p{
 }
 
 #blackhat-vis {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px auto;
+  width: 100%;
 }
- 
-/* Ensure the SVG inside scales down on small screens */
+
 #blackhat-vis svg {
+  display: block;
+  margin: 0 auto;
   max-width: 100%;
-  height: auto;
 }
  
 /* If .vis-container has a fixed/max width, override it for blackhat */

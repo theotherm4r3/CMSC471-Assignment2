@@ -1094,11 +1094,11 @@ function drawBlackHat() {
     const candidates = stats
       .filter(s =>
         s.yearCount >= 15 &&
-        s.posFraction === 1.0 &&   // never dips below zero
+        s.posFraction === 1.0 &&
         s.avgGap >= 1 &&
         s.avgGap <= 15
       )
-      .sort((a, b) => b.yearCount - a.yearCount);  // prefer most complete
+      .sort((a, b) => b.yearCount - a.yearCount);
 
     console.log('[BH] candidate countries:', candidates.slice(0, 12).map(s =>
       `${s.code} (${s.country}): ${s.yearCount} yrs, avg gap ${s.avgGap.toFixed(1)}, min ${s.minGap.toFixed(1)}`
@@ -1132,9 +1132,8 @@ function drawBlackHat() {
       return;
     }
 
-    //Layout
-    const bMargin = { top: 150, right: 200, bottom: 150, left: 180 };
-    const totalW  = 960;
+    const bMargin = { top: 170, right: 110, bottom: 155, left: 90 };
+    const totalW  = 850;
     const totalH  = 540;
     const bWidth  = totalW - bMargin.left - bMargin.right;
     const bHeight = totalH - bMargin.top  - bMargin.bottom;
@@ -1146,10 +1145,11 @@ function drawBlackHat() {
 
     const svgBH = d3.select('#blackhat-vis')
       .append('svg')
-      .attr('width',  totalW)
-      .attr('height', totalH)
+      .attr('viewBox', `0 0 ${totalW} ${totalH}`)
       .style('display', 'block')
-      .style('max-width', '100%')
+      .style('width', '100%')
+      .style('max-width', `${totalW}px`)
+      .style('height', 'auto')
       .append('g')
       .attr('transform', `translate(${bMargin.left},${bMargin.top})`);
 
@@ -1169,9 +1169,11 @@ function drawBlackHat() {
       .attr('fill', '#c8e6c9').attr('opacity', 0.5);
 
     svgBH.append('text')
-      .attr('x', 600).attr('y', bhYScale(1)+50)
+      .attr('x', bWidth + 8)
+      .attr('y', bhYScale(0))
+      .attr('dominant-baseline', 'middle')
       .style('font-size', '11px').style('fill', '#388e3c')
-      .text('← parity zone (M ≈ F)');
+      .text('parity zone (M ≈ F)');
 
     //Axes
     svgBH.append('g')
@@ -1198,7 +1200,7 @@ function drawBlackHat() {
 
     svgBH.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('x', -bHeight / 2).attr('y', -bMargin.left + 140)
+      .attr('x', -bHeight / 2).attr('y', -bMargin.left + 50)
       .attr('text-anchor', 'middle').style('font-size', '13px')
       .text('Enrollment Differential from Parity Threshold (% points)');
 
@@ -1258,9 +1260,8 @@ function drawBlackHat() {
         });
     });
 
-    //Legend 
     const legend = svgBH.append('g')
-      .attr('transform', `translate(${bWidth +15}, 0)`);
+      .attr('transform', `translate(${bWidth + 20}, 0)`);
 
     legend.append('text')
       .attr('x', 0).attr('y', 0)
