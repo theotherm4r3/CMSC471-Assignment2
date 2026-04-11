@@ -567,7 +567,7 @@ svg.selectAll('.points')
                     Year: ${d.year}<br/>
                     Male Enrollment: ${d.male_val.toFixed(1)}<br/>
                     Female Enrollment: ${d.female_val.toFixed(1)}<br/>
-                    Gender Gap: ${d.value.toFixed(1)}`)
+                    Gender Gap (M - F): ${d.value.toFixed(1)}`)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 28) + "px");
                 d3.select(this)
@@ -629,7 +629,7 @@ svgRegion.selectAll('.points')
                     Year: ${d.year}<br/>
                     Male Enrollment: ${d.male_val.toFixed(1)}<br/>
                     Female Enrollment: ${d.female_val.toFixed(1)}<br/>
-                    Gender Gap: ${d.value.toFixed(1)}`)
+                    Gender Gap (M - F): ${d.value.toFixed(1)}`)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 28) + "px");
                 d3.select(this) 
@@ -692,7 +692,7 @@ svgIncome.selectAll('.points')
                     Year: ${d.year}<br/>
                     Male Enrollment: ${d.male_val.toFixed(1)}<br/>
                     Female Enrollment: ${d.female_val.toFixed(1)}<br/>
-                    Gender Gap: ${d.value.toFixed(1)}`)
+                    Gender Gap (M - F): ${d.value.toFixed(1)}`)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 28) + "px");
                 d3.select(this)
@@ -754,7 +754,7 @@ svgWorld.selectAll('.points')
                     Year: ${d.year}<br/>
                     Male Enrollment: ${d.male_val.toFixed(1)}<br/>
                     Female Enrollment: ${d.female_val.toFixed(1)}<br/>
-                    Gender Gap: ${d.value.toFixed(1)}`)
+                    Gender Gap (M - F): ${d.value.toFixed(1)}`)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 28) + "px");
                 d3.select(this)
