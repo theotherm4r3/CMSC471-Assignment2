@@ -1249,7 +1249,7 @@ function drawBlackHat() {
                    Year: ${d.year}<br/>
                    Male Enrollment: ${d.tertiary_m.toFixed(1)}%<br/>
                    Female Enrollment: ${d.tertiary_f.toFixed(1)}%<br/>
-                   Gap (M − F): ${d.gap.toFixed(1)} pp`)
+                   Gap (M − F): ${d.gap.toFixed(1)} %`)
             .style('left', (event.pageX + 20) + 'px')
             .style('top',  (event.pageY - 28) + 'px');
           d3.select(this).attr('r', 6).style('stroke','#000').style('stroke-width','1.5px');
