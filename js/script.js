@@ -1132,7 +1132,7 @@ function drawBlackHat() {
       return;
     }
 
-    const bMargin = { top: 170, right: 110, bottom: 155, left: 90 };
+    const bMargin = { top: 170, right: 130, bottom: 155, left: 90 };
     const totalW  = 850;
     const totalH  = 540;
     const bWidth  = totalW - bMargin.left - bMargin.right;
